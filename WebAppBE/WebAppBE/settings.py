@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import os
+import os # почитать, что за пакет os? # записать импорты!
+from os import environ # импортировал и os его environ--чтобы каждый раз не писать os.environ.get('...'), а лишь environ.get('...')
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,13 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^_%ap!aq36j_nm5jkh2-@6903r=f7%^wr=_i33pj2@$365ymdm'
+SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
+ALLOWED_HOSTS = environ.get('DJANGO_ALLOWED_HOSTS').split(' ') # сложно; почему такой синтаксис здесь и в env не python-писок?
+# записать передачу секрета!
 
 # Application definition
 
@@ -39,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    "aiogram"
 
     'Auth.apps.AuthAppConfig',
     'Products.apps.ProductsConfig',
     'Subscriptions.apps.SubscriptionsConfig',
+    "Customer.apps.CustomerConfig"
 ]
 
 MIDDLEWARE = [
@@ -81,13 +84,14 @@ WSGI_APPLICATION = 'WebAppBE.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { # записать!
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "HOST": os.environ.get('DB_HOST'),
-        "NAME": os.environ.get('DB_NAME'),
-        "USER": os.environ.get('DB_USER'),
-        "PASSWORD": os.environ.get('DB_PASS'),
+        "HOST": environ.get('DB_HOST'),
+        "PORT": environ.get('DB_PORT'),
+        "NAME": environ.get('DB_NAME'),
+        "USER": environ.get('DB_USER'),
+        "PASSWORD": environ.get('DB_PASS'),
     }
 }
 
@@ -138,5 +142,8 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    ]
+    ],
+    'DEFAULT_PERMISSION_CLASSES': ( # записать!
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
