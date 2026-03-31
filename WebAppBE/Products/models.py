@@ -1,8 +1,9 @@
 from django.db import models
-from Auth.models import User
+from Auth.models import CustomUser
+
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE) # Many-to-One
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) # Many-to-One
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completed = models.BooleanField(default=False)
@@ -11,7 +12,7 @@ class Order(models.Model):
     products_group_id = models.OneToOneField("ProductsGroup", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id
+        return self.id # id формируется Джанго, но могу ли я к нему так обратиться и такое ли у этого аттрибута имя?
 
 
 class ProductsGroup(models.Model):
@@ -19,6 +20,7 @@ class ProductsGroup(models.Model):
 
     def __str__(self):
         return self.id
+
 
 class Product(models.Model):
     name = models.CharField(max_length=100)

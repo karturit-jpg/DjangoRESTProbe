@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 
+
 class SubscriptionCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

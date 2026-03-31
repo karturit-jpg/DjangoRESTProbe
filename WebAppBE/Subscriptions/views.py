@@ -1,8 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
-from .models import Subscription
+from .models import Subscription # почему здесь избыточно обственноручно импортировать Тариф и Подписку?
 from .serializers import *
+
 
 class ListTariffs(generics.ListAPIView):
     queryset = Tariff.objects.all()

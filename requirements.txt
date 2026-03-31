@@ -1,6 +1,9 @@
 Django==3.2.16
 djangorestframework==3.14.0
-psycopg2==2.8.6
+
 os==??
+
+psycopg2==2.8.6
+
 asincio==??
 aiogram==3.26.0
