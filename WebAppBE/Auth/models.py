@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta # почему некоторые пакеты нужно скачивать, а другие достаточно упомянуть?
 
 
 class CustomUser(AbstractUser):

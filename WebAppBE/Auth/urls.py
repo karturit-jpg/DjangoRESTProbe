@@ -3,5 +3,6 @@ from django.urls import path
 
 
 urlpatterns = [
-    path('api/v1/GenerateBindCode/', generate_telegram_code, name='generate_telegram_code'),
+    path('telegram/generate-code/', generate_telegram_code, name='tg_binding_get'),
+    path('api/telegram/bind/', bind_telegram_account, name='tg_binding_post'),
 ]
