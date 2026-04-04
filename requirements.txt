@@ -7,3 +7,4 @@ psycopg2==2.8.6
 
 asincio==??
 aiogram==3.26.0
+aiohttp>=3.9
