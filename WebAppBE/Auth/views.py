@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 import random
 import json
 
+import WebAppBE
+from WebAppBE.settings import BASE_DIR
 from .models import TelegramBindCode, CustomUser
 
 
@@ -25,6 +27,14 @@ def generate_telegram_code(request):
 
 @csrf_exempt
 def bind_telegram_account(request): # в качестве примера концепта, как разрешить обращаться к этому методу только сервису бота?
+
+    if request.headers.get("X-Bot-Secret") != WebAppBE.settings.BOT_API_SECRET:
+        return JsonResponse(
+            {"status": "error", "message": "Forbidden."},
+            status=403,
+        )
+    # фрагмент выше и ассоциированная логика гарантируют, что слать запросы можно только через телншрам бота, только с того пользователя которым авторизован; сравни с доступностью относительно запросов с рисованными json'ами через Postman
+
     if request.method != "POST":
         return JsonResponse(
             {"status": "error", "message": "Only POST is allowed."},

@@ -1,7 +1,8 @@
-import asyncio
-import os
+import os # не нужно было скачивать
+import asyncio # не нужно было скачивать
 
-import aiohttp
+import aiohttp # устанавливал в окружение самостоятельно
+
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
@@ -9,6 +10,7 @@ from aiogram.types import Message
 
 BOT_TOKEN = os.environ["BOT_TOKEN"] # каким синтаксисом передать секрет?
 BACKEND_BIND_URL = os.environ["BACKEND_BIND_URL"]
+BOT_API_SECRET = os.environ["BOT_API_SECRET"]
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -31,12 +33,20 @@ async def handle_bind_code(message: Message):
         "telegram_id": telegram_id,
     }
 
+    headers = {
+        "X-Bot-Secret": BOT_API_SECRET,
+    }
+
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.post(BACKEND_BIND_URL, json=payload) as response:
+            async with session.post(
+                    BACKEND_BIND_URL,
+                    json=payload,
+                    headers=headers
+            ) as response:
                 data = await response.json()
     except aiohttp.ClientError:
-        await message.answer("Could not connect to the backend. Please try again later.")
+        await message.answer("Backend is unavailable. Please try again later.")
         return
 
     if response.status == 200 and data.get("status") == "ok":
