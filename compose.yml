@@ -1,27 +1,72 @@
 services:
-  web-app:
+
+  web:
     build:
-      context: .
-    ports:
-      - "8000:8000"
+      context: . # он точно так соберет, или из-за того, что изменил вложенность файлов проекта, не сможет зарезолвить, и нужно указать полный путь?
+      # аттрибут с именем dockerfile понадобилось писать, поскольку их в поекте несколько? Был бы один--аттрибут можно не сообщать?
+      dockerfile: WebAppBE/Dockerfile # заметь, употребляются имена каталогов какие они есть в статическом проекте, а не в контейнерах; делаю вывод, что обращаться к ним задумано во время сборки
+    image: webapp
+    container_name: webapp
+    restart: always
+    command: >
+      sh -c "python manage.py migrate &&
+      runserver 0.0.0.0:8000"
+#    command: "python manage.py runserver 0.0.0.0:8000" # чем это выражение качественно отличается от аналогичной части команды указанной выше?
     env_file:
       - .env # передаю ".env" но не для передачи секретов в этот файл, а для передачи секретов в "settings.py"; почему не нужно передавать секреты для "compose.yml"?
     volumes:
-      - ./WebAppBE:/WebAppBE
-    environment:
-      - DB_HOST=database
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-    command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      - ./WebAppBE:/app
+    ports:
+      - "8000:8000"
     depends_on:
-      - database
-  database:
-    image: postgres:14.6-alpine
+      - db
+
+    # нужен ли фрагмент ниже?
+    links:
+      - "postgres:db" # в вырвжении в скобках, что пишется прочив чего? Иначе говоря, что за два рагумента здесь указываются? Может я напутал с именами?
+    networks:
+      - default
+
+#    environment: # у Балакирева не было указано, но в плэйлисте по оптимизации было
+#      - DB_HOST=db
+#      - DB_NAME=${DB_NAME}
+#      - DB_USER=${DB_USER}
+#      - DB_PASS=${DB_PASS}
+
+  db:
+    image: postgres:17-alpine
+#    env_file: # почему здесь не нужно сообщать env-файл ?
+#      - .env
+    container_name: postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - default
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
 
+  bot:
+    build:
+      context: .
+      dockerfile: Bot/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - web
+    volumes:
+      - ./bot:/app
+    command: python main.py
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
 # как начать сохранять сведения в базу? и загружать их в образ postgres при деплое?
+# как на формулировки и архитектуру повлияет внесение Nginx или Adminer?
+# какая принята разметка в Dockerfile и Docker-compose? PEP-что-нибуть там?
