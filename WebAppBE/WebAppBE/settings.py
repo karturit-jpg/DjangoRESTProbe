@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = environ.get('DJANGO_SECRET_KEY') # или << os.environ["DJANGO_SECRET_KEY"] >>
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "0") == "1" # что это выражение означает?
 
-ALLOWED_HOSTS = environ.get('DJANGO_ALLOWED_HOSTS').split(' ') # сложно; почему такой синтаксис здесь и в env не python-писок?
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",") #'1 << environ.get('DJANGO_ALLOWED_HOSTS').split(' ') >> # сложно; почему такой синтаксис здесь и в env не python-писок?
 # записать передачу секрета!
 
 # Application definition
