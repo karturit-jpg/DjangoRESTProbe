@@ -28,7 +28,7 @@ def generate_telegram_code(request):
 @csrf_exempt
 def bind_telegram_account(request): # в качестве примера концепта, как разрешить обращаться к этому методу только сервису бота?
 
-    if request.headers.get("X-Bot-Secret") != WebAppBE.settings.BOT_API_SECRET:
+    if request.headers.get("X-Bot-Secret") != WebAppBE.settings.BOT_API_SECRET: # записать как примерсинтаксиса импорта в проекте со сложной иерархией каталогов
         return JsonResponse(
             {"status": "error", "message": "Forbidden."},
             status=403,
