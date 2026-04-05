@@ -17,6 +17,8 @@ FROM python:3.9-alpine3.16
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN pip install --upgrade pip
+
 # так ли нужно выражение ниже?
 #RUN apt-get update && apt-get install -y --no-install-recommends \
 #    netcat-openbsd \

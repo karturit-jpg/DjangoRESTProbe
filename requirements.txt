@@ -3,9 +3,9 @@ djangorestframework==3.14.0
 
 # os==?? # не нужно указывать версии? почему?
 
-psycopg2==2.8.6 # << psycopg[binary]>=3.1 >> -- новый для меня синтаксис
+psycopg[binary]>=3.1 # psycopg2==2.8.6 -- билд не удается: выдает ошибку, ассоциированную с ним # << psycopg[binary]>=3.1 >> -- новый для меня синтаксис
 # psycopg2-binary==2.8.5
 
 # asincio==?? # не нужно указывать версии? почему?
-aiogram==3.27.0
-aiohttp==3.13.5 # aiohttp>=3.9
+aiogram==3.17.0
+aiohttp==3.10.8 # aiohttp>=3.9
