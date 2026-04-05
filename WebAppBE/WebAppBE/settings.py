@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'WebAppBE.wsgi.application'
 
 DATABASES = { # записать!
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg', # заменил << 'ENGINE': 'django.db.backends.postgresql' >> --> << 'ENGINE': 'django.db.backends.postgresql_psycopg2' >> из-за той ошибки в контейнере
         "HOST": environ.get('DB_HOST'),
         "PORT": environ.get('DB_PORT'),
         "NAME": environ.get('DB_NAME'),
