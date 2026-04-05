@@ -8,8 +8,7 @@ services:
     image: webapp
     container_name: webapp
     restart: always
-    command: "python manage.py migrate &&
-      runserver 0.0.0.0:8000"
+    command: "python manage.py runserver 0.0.0.0:8000" # миграции не стал применять командой здесь из-за логов ошибок в контейнере: он все вреям пытается их заново применить
 #    command: "python manage.py runserver 0.0.0.0:8000" # чем это выражение качественно отличается от аналогичной части команды указанной выше?
     env_file:
       - .env # передаю ".env" но не для передачи секретов в этот файл, а для передачи секретов в "settings.py"; почему не нужно передавать секреты для "compose.yml"?
