@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.16
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -20,3 +20,5 @@ RUN adduser --disabled-password --gecos "" botuser
 USER botuser
 
 #EXPOSE 8000
+
+# порт с каким номером открывать для сети? где это определять: в Dockerfile или compose? В каких выражениях это опредеить? Как завязать с web-сервисом в моей сети сервисов?

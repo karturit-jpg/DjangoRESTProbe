@@ -8,8 +8,7 @@ services:
     image: webapp
     container_name: webapp
     restart: always
-    command: >
-      sh -c "python manage.py migrate &&
+    command: "python manage.py migrate &&
       runserver 0.0.0.0:8000"
 #    command: "python manage.py runserver 0.0.0.0:8000" # чем это выражение качественно отличается от аналогичной части команды указанной выше?
     env_file:
@@ -59,6 +58,9 @@ services:
     volumes:
       - ./bot:/app
     command: python main.py
+    networks: # должен ли бот быть в сети? опиши схему сети, какой она должна быть?
+      - default
+    # нужно ли в связи с обьединением в единую с web-сервисом сеть писать здесь PORT или LINK?
 
 networks:
   default:
