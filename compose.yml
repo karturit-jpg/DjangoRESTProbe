@@ -2,48 +2,42 @@ services:
 
   web:
     build:
-      context: . # он точно так соберет, или из-за того, что изменил вложенность файлов проекта, не сможет зарезолвить, и нужно указать полный путь?
-      # аттрибут с именем dockerfile понадобилось писать, поскольку их в поекте несколько? Был бы один--аттрибут можно не сообщать?
-      dockerfile: WebAppBE/Dockerfile # заметь, употребляются имена каталогов какие они есть в статическом проекте, а не в контейнерах; делаю вывод, что обращаться к ним задумано во время сборки
-    image: webapp
-    container_name: webapp
-    restart: always
-    command: "python manage.py runserver 0.0.0.0:8000" # миграции не стал применять командой здесь из-за логов ошибок в контейнере: он все вреям пытается их заново применить
-#    command: "python manage.py runserver 0.0.0.0:8000" # чем это выражение качественно отличается от аналогичной части команды указанной выше?
+      context: .
+      dockerfile: WebAppBE/Dockerfile
+    image: webapp # для отладки
+    container_name: webapp # для отладки
+    restart: unless-stopped
     env_file:
-      - .env # передаю ".env" но не для передачи секретов в этот файл, а для передачи секретов в "settings.py"; почему не нужно передавать секреты для "compose.yml"?
-    volumes:
-      - ./WebAppBE:/app
-    ports:
-      - "8000:8000"
+      - .env
     depends_on:
       - db
-
-    # нужен ли фрагмент ниже?
-    links:
-      - "db:dbps" # в вырвжении в скобках, что пишется прочив чего?--{ ИмяСервисаКакОнНазванВКомпозе:ИмяПораИзЭнвФайла } # Почему тогда сюда не пробросить хост синтаксисом << ${ИмяПеременнойОкружения} >>--не последовательно # Иначе говоря, что за два рагумента здесь указываются? Может я напутал с именами?
-    networks:
-      - default
-
-#    environment: # у Балакирева не было указано, но в плэйлисте по оптимизации было
-#      - DB_HOST=db
-#      - DB_NAME=${DB_NAME}
-#      - DB_USER=${DB_USER}
-#      - DB_PASS=${DB_PASS}
+    volumes:
+      - ./WebAppBE:/app
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn WebAppBE.wsgi:application --bind 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+#    links:
+#      - "db:dbps"
+#    networks:
+#      - default
 
   db:
-    image: postgres:17-alpine
-#    env_file: # почему здесь не нужно сообщать env-файл ?
-#      - .env
-    container_name: postgres
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-    networks:
-      - default
+    image: postgres:16
+    container_name: postgres # не критически важная строка, но для отладки мне нужна
+    restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # << - ./postgres_data:/var/lib/postgresql/data >> --заметь, несколько отличается от выражения, как его пишет Балакирев; что качественно меняется?
+    networks:
+      - default
+
 
   bot:
     build:
@@ -55,21 +49,14 @@ services:
     depends_on:
       - web
     volumes:
-      - ./bot:/app
+      - ./Bot:/app
     command: python main.py
-    networks: # должен ли бот быть в сети? опиши схему сети, какой она должна быть?
-      - default
-    # нужно ли в связи с обьединением в единую с web-сервисом сеть писать здесь PORT или LINK?
+#    networks:
+#      - default
 
-networks:
-  default:
-    driver: bridge
+#networks:
+#  default:
+#    driver: bridge
 
 volumes:
-  postgres_data: # эта строка создала мне в проекте, а не в оперативной памяти в Докере, папку? Зачем? Как это соотносится со сведениями, CRUD'ящимися в контейнере?
-
-# как начать сохранять сведения в базу? и загружать их в образ postgres при деплое?
-# как на формулировки и архитектуру повлияет внесение Nginx или Adminer?
-# какая принята разметка в Dockerfile и Docker-compose? PEP-что-нибуть там?
-
-# понятия не имею, используются сети?, указанные мною порты?, какие выражения из сообщенных избыточны?, почему других достаточно?, отчего нет необходимости в закоментированных? почему тот блогер писал дев-конфиг postgres'а в web-серсиве? отчего я смог обойтись без него? какова роль отдельных флагов, которые расставил ChatGPT? Как меняется вид выражений в различных подходах формулировки описания сервисов и их взаимодействия? Какого типа тома я создал, и самое главное, как ими пользоваться?
+  postgres_data:

@@ -8,8 +8,8 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     completed = models.BooleanField(default=False)
     on_promo_terms = models.BooleanField(default=False)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    products_group_id = models.OneToOneField("ProductsGroup", on_delete=models.CASCADE)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) # разрешаю Null'ы для упрощения тестов из терминала
+    products_group_id = models.OneToOneField("ProductsGroup", on_delete=models.CASCADE, null=True, blank=True) # разрешаю Null'ы для упрощения тестов из терминала
 
     def __str__(self):
         return self.id # id формируется Джанго, но могу ли я к нему так обратиться и такое ли у этого аттрибута имя?

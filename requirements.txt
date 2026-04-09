@@ -51,3 +51,4 @@ psycopg[binary]>=3.1
 gunicorn>=21.2 # добавить nginx в compose, наверное без него часть ошибок
 aiohttp>=3.9
 aiogram>=3.0
+requests==2.33.1

@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "Subscriptions.Middleware.SubscriptionCheckMiddleware",
+    "Subscriptions.middleware.SubscriptionCheckMiddleware",
 ]
 
 ROOT_URLCONF = 'WebAppBE.urls'
