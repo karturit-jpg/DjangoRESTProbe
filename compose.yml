@@ -1,5 +1,4 @@
 services:
-
   web:
     build:
       context: .
@@ -18,10 +17,6 @@ services:
              gunicorn WebAppBE.wsgi:application --bind 0.0.0.0:8000"
     ports:
       - "8000:8000"
-#    links:
-#      - "db:dbps"
-#    networks:
-#      - default
 
   db:
     image: postgres:16
@@ -38,7 +33,6 @@ services:
     networks:
       - default
 
-
   bot:
     build:
       context: .
@@ -51,12 +45,6 @@ services:
     volumes:
       - ./Bot:/app
     command: python main.py
-#    networks:
-#      - default
-
-#networks:
-#  default:
-#    driver: bridge
 
 volumes:
   postgres_data:
