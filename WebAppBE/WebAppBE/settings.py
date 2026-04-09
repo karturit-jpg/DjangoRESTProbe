@@ -30,6 +30,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",") #'1 << environ.ge
 # записать передачу секрета!
 
 # BOT_API_SECRET = os.environ["BOT_API_SECRET"] # зачем в качестве промежуточного звена передавать секрет в settings, если можно то же самое выражение употребить сразу во view? # не смог написать импорт значения этой переменной из settings во view
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+BOT_API_SECRET = os.environ["BOT_API_SECRET"]
 
 # Application definition
 

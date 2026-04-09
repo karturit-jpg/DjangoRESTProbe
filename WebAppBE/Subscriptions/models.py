@@ -11,7 +11,7 @@ class Subscription(models.Model):
     fk_user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True) # пускай пользователь может одновременно иметь только одну из независимо от него определенных подпискок
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 
 class Tariff(models.Model):
@@ -20,4 +20,4 @@ class Tariff(models.Model):
     fk_subscription = models.ForeignKey("Subscription", on_delete=models.SET_NULL, null=True, blank=True) # у одной подписки будет один из тарифов
 
     def __str__(self):
-        return self.name
+        return str(self.name)

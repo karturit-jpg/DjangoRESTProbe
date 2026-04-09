@@ -12,14 +12,14 @@ class Order(models.Model):
     products_group_id = models.OneToOneField("ProductsGroup", on_delete=models.CASCADE, null=True, blank=True) # разрешаю Null'ы для упрощения тестов из терминала
 
     def __str__(self):
-        return self.id # id формируется Джанго, но могу ли я к нему так обратиться и такое ли у этого аттрибута имя?
+        return f"{self.id}" # id формируется Джанго, но могу ли я к нему так обратиться и такое ли у этого аттрибута имя?
 
 
 class ProductsGroup(models.Model):
     product = models.ManyToManyField("Product", related_name="products_group")
 
     def __str__(self):
-        return self.id
+        return f"{self.id}"
 
 
 class Product(models.Model):
@@ -27,7 +27,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 # когда удаляю файлы миграции, Джанго по разному воспримит при попытке создать миграции: (1) отсутствие только самих файлов миграций; (2) + отсутствие файла init  папке миграций; (3) + отсутствие самой папки миграций
 # как обратить изменения в локальном коде, откатываясь на последний облачный коммит?
