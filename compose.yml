@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: WebAppBE/Dockerfile
-    image: webapp # для отладки
+    image: webapp # не критически важная строка, но для отладки мне нужна
     container_name: webapp # для отладки
     restart: unless-stopped
     env_file:
@@ -20,7 +20,7 @@ services:
 
   db:
     image: postgres:16
-    container_name: postgres # не критически важная строка, но для отладки мне нужна
+    container_name: postgres # для отладки
     restart: unless-stopped
     env_file:
       - .env

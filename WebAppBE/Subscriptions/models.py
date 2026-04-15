@@ -8,10 +8,11 @@ class Subscription(models.Model):
     duration = models.IntegerField(default=30)
     start_date = models.DateField()
     is_active = models.BooleanField(default=True) # продлена? приостановлена?
-    fk_user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True) # пускай пользователь может одновременно иметь только одну из независимо от него определенных подпискок
+    user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True) # пускай пользователь может одновременно иметь только одну из независимо от него определенных подпискок
+    # сменил имена аттрибутов-внешних ключей; мотивацивию дал Алексей: "ставишь преписку fk_. так делать не рекомендуется потому что если мы залезем в бд то там будет сохранено следующее: название_поля_id,  в котором будет храниться айдишка. так мы и поймем что это foreign key"
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name}" # nb, указал два функционально идентичных способа передать имя обьекта: в этом классе и классе ниже
 
 
 class Tariff(models.Model):

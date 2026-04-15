@@ -7,6 +7,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
+    # для записей об инстансах этого класса уже админ передает id пользователя, thus не определяю hiddenfield=CurrentUser()
 
 
 class TariffSerializer(serializers.ModelSerializer):
