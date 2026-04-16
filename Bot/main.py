@@ -13,7 +13,7 @@ BACKEND_BIND_URL = os.environ["BACKEND_BIND_URL"]
 BOT_API_SECRET = os.environ["BOT_API_SECRET"]
 
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
+dp = Dispatcher()  # режде не видел, чтобы в декораторе вызывали к инстансу
 
 
 @dp.message(Command("start"))
@@ -26,27 +26,27 @@ async def handle_start(message: Message): # асинхронная библио�
 @dp.message()
 async def handle_bind_code(message: Message):
     code = message.text.strip()
-    telegram_id = message.from_user.id
+    telegram_id = message.from_user.id # нужна ли проверка, что он залогинен? не знаю этой логики телеграма
 
-    payload = {
+    payload = { # наолняю словарь BE-to-BE-запроса
         "code": code,
         "telegram_id": telegram_id,
     }
 
-    headers = {
+    headers = { # наполняю словарь BE-to-BE-запроса
         "X-Bot-Secret": BOT_API_SECRET,
     }
 
     try:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession() as session: # наверное, эта часть вида фрагмента продиктована логикой написания в aiohttp
             async with session.post(
                     BACKEND_BIND_URL,
                     json=payload,
                     headers=headers
             ) as response:
                 data = await response.json()
-    except aiohttp.ClientError:
-        await message.answer("Backend is unavailable. Please try again later.")
+    except aiohttp.ClientError: # зачем вообще эта ошибка? пускай просто 500'ит --чтобы не исполнялся возврат уведомления об успехе
+        await message.answer("Backend is unavailable. Please try again later.") # как то обстоятельство, что в деплое он будет в другом контейнере, shape'ит статический код здесь
         return
 
     if response.status == 200 and data.get("status") == "ok":
